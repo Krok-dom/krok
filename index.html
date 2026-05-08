@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KROK — Free Civic Space for Belarusians</title>
+  <meta name="description" content="An independent civic platform providing safe, private space for free expression — outside regime control." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #08080d;
+      --surface:  #111118;
+      --border:   #1e1e2a;
+      --text:     #e8e4dc;
+      --muted:    #7a7890;
+      --red:      #c0122b;
+      --red-soft: #e8193600;
+      --white:    #f5f2eb;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: .6;
+    }
+
+    /* ── FLAG STRIPE ── */
+    .flag-bar {
+      display: flex;
+      height: 4px;
+      width: 100%;
+    }
+    .flag-bar span:nth-child(1) { flex: 1; background: var(--white); }
+    .flag-bar span:nth-child(2) { flex: 1; background: var(--red); }
+    .flag-bar span:nth-child(3) { flex: 1; background: var(--white); }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 6vw;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Cormorant', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--red); }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .85rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-left: 2.5rem;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: 10vh 6vw 8vh;
+      max-width: 960px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: .3rem .8rem;
+      margin-bottom: 2.5rem;
+      border-radius: 2px;
+      animation: fadeUp .6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--white);
+      animation: fadeUp .7s .1s ease both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .hero-sub {
+      margin-top: 2rem;
+      max-width: 560px;
+      font-size: 1.05rem;
+      color: var(--muted);
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--red);
+      margin: 3rem 0;
+      animation: fadeUp .6s .3s ease both;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 6vw;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-family: 'Cormorant', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      max-width: 640px;
+      font-size: .97rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── PILLARS GRID ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--red);
+      padding: 2rem 1.8rem;
+      border-radius: 2px;
+      transition: border-color .2s, transform .2s;
+    }
+    .pillar:hover {
+      border-color: var(--red);
+      transform: translateY(-3px);
+    }
+
+    .pillar-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .pillar h3 {
+      font-family: 'Cormorant', serif;
+      font-size: 1.25rem;
+      color: var(--white);
+      margin-bottom: .6rem;
+    }
+
+    .pillar p {
+      font-size: .85rem;
+      margin: 0;
+    }
+
+    /* ── STATUS BLOCK ── */
+    .status-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      padding: 2rem 2.5rem;
+      border-radius: 2px;
+      max-width: 680px;
+      margin-top: 2rem;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      margin-right: .5rem;
+      animation: pulse 2s infinite;
+    }
+
+    .status-line {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+    .status-line strong { color: var(--text); }
+
+    /* ── CONTACT ── */
+    .contact-wrap {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 1.6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color .2s;
+    }
+    .contact-item:hover { border-color: var(--red); }
+
+    .contact-item .ci-label {
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: .2rem;
+    }
+    .contact-item .ci-val {
+      font-size: .95rem;
+      color: var(--white);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 6vw;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    footer p {
+      font-size: .78rem;
+      color: var(--muted);
+      max-width: none;
+      margin: 0;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant', serif;
+      font-size: 1.1rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+    }
+    .footer-logo span { color: var(--red); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .3; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header { flex-direction: column; gap: 1.2rem; text-align: center; }
+      nav a  { margin-left: 1rem; }
+      section { padding: 4rem 6vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flag-bar"><span></span><span></span><span></span></div>
+
+  <header>
+    <a class="logo" href="#">KROK<span>.</span></a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#mission">Mission</a>
+      <a href="#status">Status</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-label">Independent Civic Platform</span>
+    <h1>Free <em>Civic</em><br>Space for<br>Belarusians</h1>
+    <p class="hero-sub">
+      KROK is an independent civic platform providing a safe, private environment
+      for free expression and community — outside regime control.
+    </p>
+    <div class="hero-divider"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">What is KROK</p>
+    <h2>A space where<br>every voice matters</h2>
+    <p>
+      KROK — meaning "step" — is built for Belarusians who believe in the future
+      of their country. It is an independent digital platform designed from the ground up
+      to protect its users from surveillance, data collection, and political pressure.
+    </p>
+    <p>
+      Unlike existing platforms captured by regime-aligned actors or compromised
+      opposition media, KROK operates with full editorial and technical independence.
+      No backdoors. No cooperation with state security services. No exceptions.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🔒</div>
+        <h3>Private by Design</h3>
+        <p>No IP logging. No metadata collection. No third-party tracking. User anonymity is non-negotiable.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🗣️</div>
+        <h3>Free Expression</h3>
+        <p>A moderated but open space for civic discussion, news sharing, and community organisation.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🛡️</div>
+        <h3>Independent</h3>
+        <p>Not affiliated with any political party, opposition group, or external government. Fully independent.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌍</div>
+        <h3>Diaspora-Inclusive</h3>
+        <p>Built for Belarusians wherever they are — inside the country or in exile across Europe and beyond.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section id="mission">
+    <p class="section-label">Why it matters</p>
+    <h2>Belarus needs an<br>independent voice</h2>
+    <p>
+      Since 2020, civic space in Belarus has been systematically destroyed.
+      Independent media is banned. Journalists are imprisoned. Online platforms
+      are monitored and used to identify and persecute dissidents.
+    </p>
+    <p>
+      At the same time, many diaspora-run media outlets have been captured
+      by politically motivated actors who suppress independent voices under the
+      guise of opposition activity.
+    </p>
+    <p>
+      KROK exists to fill that gap — a platform built on principles, not politics.
+      A step toward a future where every Belarusian can speak freely.
+    </p>
+  </section>
+
+  <!-- STATUS -->
+  <section id="status">
+    <p class="section-label">Project Status</p>
+    <h2>Approaching<br>public launch</h2>
+    <p>
+      KROK is currently in final development and pre-launch preparation.
+      We are establishing the technical infrastructure, security review,
+      and funding to support a stable and protected launch.
+    </p>
+
+    <div class="status-block">
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <strong>Development:</strong> Complete — full codebase ready
+      </div>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <strong>Security:</strong> Codebase maintained privately for operational security
+      </div>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <strong>Infrastructure:</strong> Pending — subject to successful funding
+      </div>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <strong>Public launch:</strong> Planned upon infrastructure deployment
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label">Contact & Support</p>
+    <h2>Get in touch</h2>
+    <p>
+      For questions regarding the platform, partnerships, or support of the project,
+      please reach out via the contact below.
+    </p>
+
+    <div class="contact-wrap">
+      <a class="contact-item" href="mailto:contact@krok.community">
+        <div>
+          <span class="ci-label">Email</span>
+          <span class="ci-val">contact@krok.community</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">KROK<span>.</span></span>
+    <p>© 2026 KROK Civic Platform. Independent. Private. Free.</p>
+    <p>Registered business: Poland (JDG)</p>
+  </footer>
+
+</body>
+</html>
